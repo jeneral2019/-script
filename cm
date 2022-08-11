@@ -1,0 +1,46 @@
+#!/opt/homebrew/bin/bash
+
+
+
+# config
+
+CHROM_CACHE_NAME=".chromeCache"
+APP_NAME="Google Chrome"
+PROXY_SERVER="127.0.0.1:7890"
+
+# SHELL_DIR="$( cd "$( dirname "$0" )" && pwd )"
+# source ${SHELL_DIR}/env.sh
+# declare -A INIT_LIST
+# INIT_LIST=([CHROM_CACHE_NAME]=".chromeCache" \
+# [APP_NAME]="Google Chrome" \
+# [PROXY_SERVER]="127.0.0.1:7890" \
+# )
+
+# source $SHELL_DIR/init.sh
+
+
+ARGS=""
+
+# init
+HOME="$(cd && pwd)"
+CACHE_PATH=${HOME}/${CHROM_CACHE_NAME}
+
+# paramter qa
+if [ $# -gt 0 ] ; then # -gt 大于
+	CACHE_DIR="${CACHE_PATH}/$1"
+	ARGS=$ARGS" --args --user-data-dir="$CACHE_DIR
+
+	if [[ $1 == "x" && -n ${PROXY_SERVER} ]]; then # -n 非空为true； -z 空为true
+		ARGS=$ARGS" --proxy-server=127.0.0.1:7890"
+	fi
+fi
+
+# create dir
+if [ ! -r "${CACHE_DIR}" ]; then
+    echo "mkdir ${CACHE_DIR}"
+    mkdir -p ${CACHE_DIR}
+fi
+
+# run command
+echo "open --new -a ${APP_NAME} ${ARGS}"
+open --new -a "${APP_NAME}" ${ARGS}
